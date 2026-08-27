@@ -498,60 +498,93 @@ func addNodeSharableDeviceUsage(ssn *Session, task *api.TaskInfo) {
 	}
 }
 
-// updateQueueStatus updates allocated field in queue status on session close.
-func updateQueueStatus(ssn *Session) {
+type queueAllocationFilter func(job *api.JobInfo, task *api.TaskInfo) bool
+
+func calculateQueueAllocations(ssn *Session, include queueAllocationFilter) map[api.QueueID]v1.ResourceList {
 	rootQueue := api.QueueID("root")
-	// calculate allocated resources on each queue
-	var allocatedResources = make(map[api.QueueID]*api.Resource, len(ssn.Queues))
-	var allocatedDRAResources = make(map[api.QueueID]map[string]*api.DRAResource, len(ssn.Queues))
-	var allocatedDRAClaimRefs = make(map[api.QueueID]map[string]int, len(ssn.Queues))
+	allocatedResources := make(map[api.QueueID]*api.Resource, len(ssn.Queues))
+	allocatedDRAResources := make(map[api.QueueID]map[string]*api.DRAResource, len(ssn.Queues))
+	allocatedDRAClaimRefs := make(map[api.QueueID]map[string]int, len(ssn.Queues))
 	for queueID := range ssn.Queues {
 		allocatedResources[queueID] = &api.Resource{}
 	}
 	for _, job := range ssn.Jobs {
 		for status, tasks := range job.TaskStatusIndex {
-			if api.AllocatedStatus(status) {
-				for _, task := range tasks {
-					addNodeSharableDeviceUsage(ssn, task)
-					allocatedResources[job.Queue].Add(task.Resreq)
-					addTaskDRAAllocatedByQueue(allocatedDRAResources, allocatedDRAClaimRefs, job.Queue, task)
-					// recursively updates the allocated resources of parent queues
-					queue := ssn.Queues[job.Queue].Queue
-					// compatibility unit testing
-					for ssn.Queues[rootQueue] != nil {
-						parent := string(rootQueue)
-						if queue.Spec.Parent != "" {
-							parent = queue.Spec.Parent
-						}
-						allocatedResources[api.QueueID(parent)].Add(task.Resreq)
-						addTaskDRAAllocatedByQueue(allocatedDRAResources, allocatedDRAClaimRefs, api.QueueID(parent), task)
-
-						if parent == string(rootQueue) {
-							break
-						}
-						queue = ssn.Queues[api.QueueID(queue.Spec.Parent)].Queue
+			if !api.AllocatedStatus(status) {
+				continue
+			}
+			for _, task := range tasks {
+				if include != nil && !include(job, task) {
+					continue
+				}
+				addNodeSharableDeviceUsage(ssn, task)
+				allocatedResources[job.Queue].Add(task.Resreq)
+				addTaskDRAAllocatedByQueue(allocatedDRAResources, allocatedDRAClaimRefs, job.Queue, task)
+				// Recursively include the task in every parent Queue up to root.
+				queue := ssn.Queues[job.Queue].Queue
+				// Keep compatibility with tests that do not define a root Queue.
+				for ssn.Queues[rootQueue] != nil {
+					parent := string(rootQueue)
+					if queue.Spec.Parent != "" {
+						parent = queue.Spec.Parent
 					}
+					allocatedResources[api.QueueID(parent)].Add(task.Resreq)
+					addTaskDRAAllocatedByQueue(allocatedDRAResources, allocatedDRAClaimRefs, api.QueueID(parent), task)
+
+					if parent == string(rootQueue) {
+						break
+					}
+					queue = ssn.Queues[api.QueueID(queue.Spec.Parent)].Queue
 				}
 			}
 		}
 	}
 
-	// update queue status
+	result := make(map[api.QueueID]v1.ResourceList, len(ssn.Queues))
 	for queueID := range ssn.Queues {
-		// convert api.Resource to v1.ResourceList
-		var queueStatus = util.ConvertRes2ResList(allocatedResources[queueID]).DeepCopy()
+		queueStatus := util.ConvertRes2ResList(allocatedResources[queueID]).DeepCopy()
 		queueStatus = mergeDRAAllocatedIntoResourceList(queueStatus, allocatedDRAResources[queueID])
+		result[queueID] = queueStatus
+	}
+	return result
+}
 
-		if equality.Semantic.DeepEqual(ssn.Queues[queueID].Queue.Status.Allocated, queueStatus) {
-			klog.V(5).Infof("Queue <%s> allocated resource keeps equal, no need to update queue status <%v>.",
-				queueID, ssn.Queues[queueID].Queue.Status.Allocated)
+// updateQueueStatus updates Queue allocation status on session close.
+func updateQueueStatus(ssn *Session) {
+	var reporter cache.QueueAllocationReporter
+	if provider, ok := ssn.cache.(cache.QueueAllocationReporterProvider); ok {
+		reporter = provider.QueueAllocationReporter()
+	}
+	if reporter != nil && !reporter.Ready() {
+		klog.V(3).Info("Queue allocation reporter is waiting for informer handlers to finish initial synchronization")
+		return
+	}
+
+	var include queueAllocationFilter
+	if reporter != nil {
+		include = reporter.Owns
+	}
+	queueAllocations := calculateQueueAllocations(ssn, include)
+
+	for queueID, queueStatus := range queueAllocations {
+		queue := ssn.Queues[queueID]
+		if reporter != nil {
+			if err := reporter.Apply(queue, queueStatus); err != nil {
+				klog.Errorf("failed to report queue <%s> allocation: %v", queue.Name, err)
+			}
 			continue
 		}
 
-		ssn.Queues[queueID].Queue.Status.Allocated = queueStatus
+		if equality.Semantic.DeepEqual(queue.Queue.Status.Allocated, queueStatus) {
+			klog.V(5).Infof("Queue <%s> allocated resource keeps equal, no need to update queue status <%v>.",
+				queueID, queue.Queue.Status.Allocated)
+			continue
+		}
 
-		if err := ssn.cache.UpdateQueueStatus(ssn.Queues[queueID]); err != nil {
-			klog.Errorf("failed to update queue <%s> status: %s", ssn.Queues[queueID].Name, err.Error())
+		queue.Queue.Status.Allocated = queueStatus
+
+		if err := ssn.cache.UpdateQueueStatus(queue); err != nil {
+			klog.Errorf("failed to update queue <%s> status: %s", queue.Name, err.Error())
 		}
 	}
 }

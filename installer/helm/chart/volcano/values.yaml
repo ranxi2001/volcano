@@ -292,7 +292,14 @@ custom:
 
   # Specify feature gates for components
   scheduler_feature_gates: ~
+  controller_feature_gates: ~
   admission_feature_gates: ~
+
+  # Fixed scheduler ring that is the complete Queue accounting domain when
+  # QueueAllocationReporting is enabled, for example volcano-system/volcano-scheduler.
+  queue_allocation_authoritative_ring_id: ~
+  # Fixed member count declared by the same authoritative scheduler ring.
+  queue_allocation_authoritative_ring_members: ~
 
 # Specify options for scheduler sharding
   agent_scheduler_sharding_mode: ~

@@ -109,6 +109,19 @@ type Cache interface {
 	OnSessionClose()
 }
 
+// QueueAllocationReporterProvider is implemented by caches that can publish
+// fixed-ring Queue allocation snapshots. A nil reporter keeps legacy behavior.
+type QueueAllocationReporterProvider interface {
+	QueueAllocationReporter() QueueAllocationReporter
+}
+
+// QueueAllocationReporter owns one disjoint fixed-ring accounting partition.
+type QueueAllocationReporter interface {
+	Ready() bool
+	Owns(job *api.JobInfo, task *api.TaskInfo) bool
+	Apply(queue *api.QueueInfo, allocated v1.ResourceList) error
+}
+
 // Binder interface for binding task and hostname
 type Binder interface {
 	Bind(kubeClient kubernetes.Interface, tasks []*api.TaskInfo) map[api.TaskID]string

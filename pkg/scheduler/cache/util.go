@@ -86,13 +86,14 @@ func responsibleForNode(nodeName string, mySchedulerPodName string, c *consisten
 }
 
 // responsibleForPodGroup returns true if Job which PodGroup belongs is assigned to current scheduler in multi-schedulers scenario
-func responsibleForPodGroup(pg *scheduling.PodGroup, mySchedulerPodName string, c *consistent.Consistent) bool {
+func responsibleForPodGroup(pg metav1.Object, mySchedulerPodName string, c *consistent.Consistent) bool {
 	if c != nil {
 		var key string
-		if len(pg.OwnerReferences) != 0 {
-			key = pg.OwnerReferences[0].Name
+		ownerReferences := pg.GetOwnerReferences()
+		if len(ownerReferences) != 0 {
+			key = ownerReferences[0].Name
 		} else {
-			key = pg.Name
+			key = pg.GetName()
 		}
 		schedulerPodName, err := c.Get(key)
 		if err != nil {
@@ -103,7 +104,7 @@ func responsibleForPodGroup(pg *scheduling.PodGroup, mySchedulerPodName string, 
 		}
 	}
 
-	klog.V(4).Infof("schedulerPodName %v is responsible to PodGroup %v/%v", mySchedulerPodName, pg.Namespace, pg.Name)
+	klog.V(4).Infof("schedulerPodName %v is responsible to PodGroup %v/%v", mySchedulerPodName, pg.GetNamespace(), pg.GetName())
 	return true
 }
 

@@ -420,6 +420,56 @@ type QueueStatus struct {
 	// Allocated is allocated resources in queue
 	// +optional
 	Allocated v1.ResourceList `json:"allocated" protobuf:"bytes,8,opt,name=allocated"`
+
+	// SchedulerAllocations contains complete allocation snapshots reported by
+	// the members of a fixed scheduler ring. Each map key is a stable reporter ID.
+	// +optional
+	// +mapType=granular
+	SchedulerAllocations map[string]SchedulerAllocation `json:"schedulerAllocations,omitempty" protobuf:"bytes,9,rep,name=schedulerAllocations"`
+
+	// AllocationReporting identifies the fixed-ring cohort currently used to
+	// derive Allocated. It is nil until the controller activates a complete cohort.
+	// +optional
+	AllocationReporting *QueueAllocationReportingStatus `json:"allocationReporting,omitempty" protobuf:"bytes,10,opt,name=allocationReporting"`
+}
+
+// SchedulerAllocation is one fixed-ring member's complete Queue allocation snapshot.
+// +structType=atomic
+// +kubebuilder:validation:XValidation:rule="self.memberIndex < self.expectedMembers",message="memberIndex must be less than expectedMembers"
+type SchedulerAllocation struct {
+	// RingID identifies the fixed scheduler ring and its accounting domain.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=512
+	RingID string `json:"ringID" protobuf:"bytes,1,opt,name=ringID"`
+
+	// RingGeneration is an opaque digest of the fixed-ring reporting configuration.
+	// +kubebuilder:validation:Pattern=`^[a-f0-9]{64}$`
+	RingGeneration string `json:"ringGeneration" protobuf:"bytes,2,opt,name=ringGeneration"`
+
+	// MemberIndex is this reporter's StatefulSet ordinal.
+	// +kubebuilder:validation:Minimum=0
+	MemberIndex int32 `json:"memberIndex" protobuf:"varint,3,opt,name=memberIndex"`
+
+	// ExpectedMembers is the fixed number of reporters in this ring generation.
+	// +kubebuilder:validation:Minimum=1
+	ExpectedMembers int32 `json:"expectedMembers" protobuf:"varint,4,opt,name=expectedMembers"`
+
+	// Allocated is the complete resource allocation snapshot for this reporter.
+	Allocated v1.ResourceList `json:"allocated" protobuf:"bytes,5,opt,name=allocated"`
+}
+
+// QueueAllocationReportingStatus identifies the active fixed-ring allocation cohort.
+// +structType=atomic
+type QueueAllocationReportingStatus struct {
+	// RingID identifies the fixed scheduler ring and its accounting domain.
+	RingID string `json:"ringID" protobuf:"bytes,1,opt,name=ringID"`
+
+	// RingGeneration identifies the active fixed-ring reporting configuration.
+	RingGeneration string `json:"ringGeneration" protobuf:"bytes,2,opt,name=ringGeneration"`
+
+	// ExpectedMembers is the fixed number of reporters in the active cohort.
+	// +kubebuilder:validation:Minimum=1
+	ExpectedMembers int32 `json:"expectedMembers" protobuf:"varint,3,opt,name=expectedMembers"`
 }
 
 // CluterSpec represents the template of Cluster

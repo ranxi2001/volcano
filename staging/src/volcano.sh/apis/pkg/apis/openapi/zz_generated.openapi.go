@@ -30,84 +30,86 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup":                     schema_pkg_apis_meta_v1_APIGroup(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroupList":                 schema_pkg_apis_meta_v1_APIGroupList(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource":                  schema_pkg_apis_meta_v1_APIResource(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResourceList":              schema_pkg_apis_meta_v1_APIResourceList(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.APIVersions":                  schema_pkg_apis_meta_v1_APIVersions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ApplyOptions":                 schema_pkg_apis_meta_v1_ApplyOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Condition":                    schema_pkg_apis_meta_v1_Condition(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.CreateOptions":                schema_pkg_apis_meta_v1_CreateOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.DeleteOptions":                schema_pkg_apis_meta_v1_DeleteOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Duration":                     schema_pkg_apis_meta_v1_Duration(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.FieldsV1":                     schema_pkg_apis_meta_v1_FieldsV1(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GetOptions":                   schema_pkg_apis_meta_v1_GetOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupKind":                    schema_pkg_apis_meta_v1_GroupKind(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupResource":                schema_pkg_apis_meta_v1_GroupResource(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersion":                 schema_pkg_apis_meta_v1_GroupVersion(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionForDiscovery":     schema_pkg_apis_meta_v1_GroupVersionForDiscovery(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionKind":             schema_pkg_apis_meta_v1_GroupVersionKind(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionResource":         schema_pkg_apis_meta_v1_GroupVersionResource(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.InternalEvent":                schema_pkg_apis_meta_v1_InternalEvent(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector":                schema_pkg_apis_meta_v1_LabelSelector(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement":     schema_pkg_apis_meta_v1_LabelSelectorRequirement(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.List":                         schema_pkg_apis_meta_v1_List(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta":                     schema_pkg_apis_meta_v1_ListMeta(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ListOptions":                  schema_pkg_apis_meta_v1_ListOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ManagedFieldsEntry":           schema_pkg_apis_meta_v1_ManagedFieldsEntry(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime":                    schema_pkg_apis_meta_v1_MicroTime(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta":                   schema_pkg_apis_meta_v1_ObjectMeta(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference":               schema_pkg_apis_meta_v1_OwnerReference(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadata":        schema_pkg_apis_meta_v1_PartialObjectMetadata(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadataList":    schema_pkg_apis_meta_v1_PartialObjectMetadataList(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Patch":                        schema_pkg_apis_meta_v1_Patch(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.PatchOptions":                 schema_pkg_apis_meta_v1_PatchOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Preconditions":                schema_pkg_apis_meta_v1_Preconditions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.RootPaths":                    schema_pkg_apis_meta_v1_RootPaths(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR":    schema_pkg_apis_meta_v1_ServerAddressByClientCIDR(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Status":                       schema_pkg_apis_meta_v1_Status(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.StatusCause":                  schema_pkg_apis_meta_v1_StatusCause(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.StatusDetails":                schema_pkg_apis_meta_v1_StatusDetails(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Table":                        schema_pkg_apis_meta_v1_Table(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.TableColumnDefinition":        schema_pkg_apis_meta_v1_TableColumnDefinition(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.TableOptions":                 schema_pkg_apis_meta_v1_TableOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.TableRow":                     schema_pkg_apis_meta_v1_TableRow(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.TableRowCondition":            schema_pkg_apis_meta_v1_TableRowCondition(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Time":                         schema_pkg_apis_meta_v1_Time(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.Timestamp":                    schema_pkg_apis_meta_v1_Timestamp(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta":                     schema_pkg_apis_meta_v1_TypeMeta(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.UpdateOptions":                schema_pkg_apis_meta_v1_UpdateOptions(ref),
-		"k8s.io/apimachinery/pkg/apis/meta/v1.WatchEvent":                   schema_pkg_apis_meta_v1_WatchEvent(ref),
-		"k8s.io/apimachinery/pkg/runtime.RawExtension":                      schema_k8sio_apimachinery_pkg_runtime_RawExtension(ref),
-		"k8s.io/apimachinery/pkg/runtime.TypeMeta":                          schema_k8sio_apimachinery_pkg_runtime_TypeMeta(ref),
-		"k8s.io/apimachinery/pkg/runtime.Unknown":                           schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
-		"k8s.io/apimachinery/pkg/version.Info":                              schema_k8sio_apimachinery_pkg_version_Info(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.DependsOn":                 schema_pkg_apis_batch_v1alpha1_DependsOn(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.Job":                       schema_pkg_apis_batch_v1alpha1_Job(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobCondition":              schema_pkg_apis_batch_v1alpha1_JobCondition(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobList":                   schema_pkg_apis_batch_v1alpha1_JobList(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobSpec":                   schema_pkg_apis_batch_v1alpha1_JobSpec(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobState":                  schema_pkg_apis_batch_v1alpha1_JobState(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobStatus":                 schema_pkg_apis_batch_v1alpha1_JobStatus(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.LifecyclePolicy":           schema_pkg_apis_batch_v1alpha1_LifecyclePolicy(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.TaskSpec":                  schema_pkg_apis_batch_v1alpha1_TaskSpec(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.TaskState":                 schema_pkg_apis_batch_v1alpha1_TaskState(ref),
-		"volcano.sh/apis/pkg/apis/batch/v1alpha1.VolumeSpec":                schema_pkg_apis_batch_v1alpha1_VolumeSpec(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Affinity":              schema_pkg_apis_scheduling_v1beta1_Affinity(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Cluster":               schema_pkg_apis_scheduling_v1beta1_Cluster(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Guarantee":             schema_pkg_apis_scheduling_v1beta1_Guarantee(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.NodeGroupAffinity":     schema_pkg_apis_scheduling_v1beta1_NodeGroupAffinity(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.NodeGroupAntiAffinity": schema_pkg_apis_scheduling_v1beta1_NodeGroupAntiAffinity(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroup":              schema_pkg_apis_scheduling_v1beta1_PodGroup(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupCondition":     schema_pkg_apis_scheduling_v1beta1_PodGroupCondition(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupList":          schema_pkg_apis_scheduling_v1beta1_PodGroupList(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupSpec":          schema_pkg_apis_scheduling_v1beta1_PodGroupSpec(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupStatus":        schema_pkg_apis_scheduling_v1beta1_PodGroupStatus(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Queue":                 schema_pkg_apis_scheduling_v1beta1_Queue(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueList":             schema_pkg_apis_scheduling_v1beta1_QueueList(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueSpec":             schema_pkg_apis_scheduling_v1beta1_QueueSpec(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueStatus":           schema_pkg_apis_scheduling_v1beta1_QueueStatus(ref),
-		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Reservation":           schema_pkg_apis_scheduling_v1beta1_Reservation(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup":                              schema_pkg_apis_meta_v1_APIGroup(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroupList":                          schema_pkg_apis_meta_v1_APIGroupList(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource":                           schema_pkg_apis_meta_v1_APIResource(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResourceList":                       schema_pkg_apis_meta_v1_APIResourceList(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.APIVersions":                           schema_pkg_apis_meta_v1_APIVersions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ApplyOptions":                          schema_pkg_apis_meta_v1_ApplyOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Condition":                             schema_pkg_apis_meta_v1_Condition(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.CreateOptions":                         schema_pkg_apis_meta_v1_CreateOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.DeleteOptions":                         schema_pkg_apis_meta_v1_DeleteOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Duration":                              schema_pkg_apis_meta_v1_Duration(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.FieldsV1":                              schema_pkg_apis_meta_v1_FieldsV1(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GetOptions":                            schema_pkg_apis_meta_v1_GetOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupKind":                             schema_pkg_apis_meta_v1_GroupKind(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupResource":                         schema_pkg_apis_meta_v1_GroupResource(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersion":                          schema_pkg_apis_meta_v1_GroupVersion(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionForDiscovery":              schema_pkg_apis_meta_v1_GroupVersionForDiscovery(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionKind":                      schema_pkg_apis_meta_v1_GroupVersionKind(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.GroupVersionResource":                  schema_pkg_apis_meta_v1_GroupVersionResource(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.InternalEvent":                         schema_pkg_apis_meta_v1_InternalEvent(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector":                         schema_pkg_apis_meta_v1_LabelSelector(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelectorRequirement":              schema_pkg_apis_meta_v1_LabelSelectorRequirement(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.List":                                  schema_pkg_apis_meta_v1_List(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta":                              schema_pkg_apis_meta_v1_ListMeta(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ListOptions":                           schema_pkg_apis_meta_v1_ListOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ManagedFieldsEntry":                    schema_pkg_apis_meta_v1_ManagedFieldsEntry(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.MicroTime":                             schema_pkg_apis_meta_v1_MicroTime(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta":                            schema_pkg_apis_meta_v1_ObjectMeta(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.OwnerReference":                        schema_pkg_apis_meta_v1_OwnerReference(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadata":                 schema_pkg_apis_meta_v1_PartialObjectMetadata(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.PartialObjectMetadataList":             schema_pkg_apis_meta_v1_PartialObjectMetadataList(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Patch":                                 schema_pkg_apis_meta_v1_Patch(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.PatchOptions":                          schema_pkg_apis_meta_v1_PatchOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Preconditions":                         schema_pkg_apis_meta_v1_Preconditions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.RootPaths":                             schema_pkg_apis_meta_v1_RootPaths(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.ServerAddressByClientCIDR":             schema_pkg_apis_meta_v1_ServerAddressByClientCIDR(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Status":                                schema_pkg_apis_meta_v1_Status(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.StatusCause":                           schema_pkg_apis_meta_v1_StatusCause(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.StatusDetails":                         schema_pkg_apis_meta_v1_StatusDetails(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Table":                                 schema_pkg_apis_meta_v1_Table(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.TableColumnDefinition":                 schema_pkg_apis_meta_v1_TableColumnDefinition(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.TableOptions":                          schema_pkg_apis_meta_v1_TableOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.TableRow":                              schema_pkg_apis_meta_v1_TableRow(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.TableRowCondition":                     schema_pkg_apis_meta_v1_TableRowCondition(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Time":                                  schema_pkg_apis_meta_v1_Time(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.Timestamp":                             schema_pkg_apis_meta_v1_Timestamp(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.TypeMeta":                              schema_pkg_apis_meta_v1_TypeMeta(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.UpdateOptions":                         schema_pkg_apis_meta_v1_UpdateOptions(ref),
+		"k8s.io/apimachinery/pkg/apis/meta/v1.WatchEvent":                            schema_pkg_apis_meta_v1_WatchEvent(ref),
+		"k8s.io/apimachinery/pkg/runtime.RawExtension":                               schema_k8sio_apimachinery_pkg_runtime_RawExtension(ref),
+		"k8s.io/apimachinery/pkg/runtime.TypeMeta":                                   schema_k8sio_apimachinery_pkg_runtime_TypeMeta(ref),
+		"k8s.io/apimachinery/pkg/runtime.Unknown":                                    schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
+		"k8s.io/apimachinery/pkg/version.Info":                                       schema_k8sio_apimachinery_pkg_version_Info(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.DependsOn":                          schema_pkg_apis_batch_v1alpha1_DependsOn(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.Job":                                schema_pkg_apis_batch_v1alpha1_Job(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobCondition":                       schema_pkg_apis_batch_v1alpha1_JobCondition(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobList":                            schema_pkg_apis_batch_v1alpha1_JobList(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobSpec":                            schema_pkg_apis_batch_v1alpha1_JobSpec(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobState":                           schema_pkg_apis_batch_v1alpha1_JobState(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.JobStatus":                          schema_pkg_apis_batch_v1alpha1_JobStatus(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.LifecyclePolicy":                    schema_pkg_apis_batch_v1alpha1_LifecyclePolicy(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.TaskSpec":                           schema_pkg_apis_batch_v1alpha1_TaskSpec(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.TaskState":                          schema_pkg_apis_batch_v1alpha1_TaskState(ref),
+		"volcano.sh/apis/pkg/apis/batch/v1alpha1.VolumeSpec":                         schema_pkg_apis_batch_v1alpha1_VolumeSpec(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Affinity":                       schema_pkg_apis_scheduling_v1beta1_Affinity(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Cluster":                        schema_pkg_apis_scheduling_v1beta1_Cluster(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Guarantee":                      schema_pkg_apis_scheduling_v1beta1_Guarantee(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.NodeGroupAffinity":              schema_pkg_apis_scheduling_v1beta1_NodeGroupAffinity(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.NodeGroupAntiAffinity":          schema_pkg_apis_scheduling_v1beta1_NodeGroupAntiAffinity(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroup":                       schema_pkg_apis_scheduling_v1beta1_PodGroup(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupCondition":              schema_pkg_apis_scheduling_v1beta1_PodGroupCondition(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupList":                   schema_pkg_apis_scheduling_v1beta1_PodGroupList(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupSpec":                   schema_pkg_apis_scheduling_v1beta1_PodGroupSpec(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.PodGroupStatus":                 schema_pkg_apis_scheduling_v1beta1_PodGroupStatus(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Queue":                          schema_pkg_apis_scheduling_v1beta1_Queue(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueAllocationReportingStatus": schema_pkg_apis_scheduling_v1beta1_QueueAllocationReportingStatus(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueList":                      schema_pkg_apis_scheduling_v1beta1_QueueList(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueSpec":                      schema_pkg_apis_scheduling_v1beta1_QueueSpec(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueStatus":                    schema_pkg_apis_scheduling_v1beta1_QueueStatus(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.Reservation":                    schema_pkg_apis_scheduling_v1beta1_Reservation(ref),
+		"volcano.sh/apis/pkg/apis/scheduling/v1beta1.SchedulerAllocation":            schema_pkg_apis_scheduling_v1beta1_SchedulerAllocation(ref),
 	}
 }
 
@@ -3863,6 +3865,70 @@ func schema_pkg_apis_scheduling_v1beta1_QueueSpec(ref common.ReferenceCallback) 
 	}
 }
 
+func schema_pkg_apis_scheduling_v1beta1_QueueAllocationReportingStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "QueueAllocationReportingStatus identifies the active fixed-ring allocation cohort.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ringID": {
+						SchemaProps: spec.SchemaProps{Type: []string{"string"}, Format: ""},
+					},
+					"ringGeneration": {
+						SchemaProps: spec.SchemaProps{Type: []string{"string"}, Format: ""},
+					},
+					"expectedMembers": {
+						SchemaProps: spec.SchemaProps{Type: []string{"integer"}, Format: "int32"},
+					},
+				},
+				Required: []string{"ringID", "ringGeneration", "expectedMembers"},
+			},
+			VendorExtensible: spec.VendorExtensible{Extensions: spec.Extensions{
+				"x-kubernetes-map-type": "atomic",
+			}},
+		},
+	}
+}
+
+func schema_pkg_apis_scheduling_v1beta1_SchedulerAllocation(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SchedulerAllocation is one fixed-ring member's complete Queue allocation snapshot.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ringID": {
+						SchemaProps: spec.SchemaProps{Type: []string{"string"}, Format: ""},
+					},
+					"ringGeneration": {
+						SchemaProps: spec.SchemaProps{Type: []string{"string"}, Format: ""},
+					},
+					"memberIndex": {
+						SchemaProps: spec.SchemaProps{Type: []string{"integer"}, Format: "int32"},
+					},
+					"expectedMembers": {
+						SchemaProps: spec.SchemaProps{Type: []string{"integer"}, Format: "int32"},
+					},
+					"allocated": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{Allows: true, Schema: &spec.Schema{
+								SchemaProps: spec.SchemaProps{Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity")},
+							}},
+						},
+					},
+				},
+				Required: []string{"ringID", "ringGeneration", "memberIndex", "expectedMembers", "allocated"},
+			},
+			VendorExtensible: spec.VendorExtensible{Extensions: spec.Extensions{
+				"x-kubernetes-map-type": "atomic",
+			}},
+		},
+		Dependencies: []string{"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
 func schema_pkg_apis_scheduling_v1beta1_QueueStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -3933,12 +3999,30 @@ func schema_pkg_apis_scheduling_v1beta1_QueueStatus(ref common.ReferenceCallback
 							},
 						},
 					},
+					"schedulerAllocations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchedulerAllocations contains complete allocation snapshots reported by the members of a fixed scheduler ring. Each map key is a stable reporter ID.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{Allows: true, Schema: &spec.Schema{
+								SchemaProps: spec.SchemaProps{Ref: ref("volcano.sh/apis/pkg/apis/scheduling/v1beta1.SchedulerAllocation")},
+							}},
+						},
+						VendorExtensible: spec.VendorExtensible{Extensions: spec.Extensions{
+							"x-kubernetes-map-type": "granular",
+						}},
+					},
+					"allocationReporting": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllocationReporting identifies the fixed-ring cohort currently used to derive Allocated.",
+							Ref:         ref("volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueAllocationReportingStatus"),
+						},
+					},
 				},
 				Required: []string{"allocated"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity", "volcano.sh/apis/pkg/apis/scheduling/v1beta1.Reservation"},
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "volcano.sh/apis/pkg/apis/scheduling/v1beta1.QueueAllocationReportingStatus", "volcano.sh/apis/pkg/apis/scheduling/v1beta1.Reservation", "volcano.sh/apis/pkg/apis/scheduling/v1beta1.SchedulerAllocation"},
 	}
 }
 

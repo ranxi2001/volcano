@@ -17,6 +17,8 @@ limitations under the License.
 package queue
 
 import (
+	"k8s.io/apimachinery/pkg/api/equality"
+	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
 
@@ -24,6 +26,7 @@ import (
 	schedulingv1beta1 "volcano.sh/apis/pkg/apis/scheduling/v1beta1"
 	"volcano.sh/volcano/pkg/controllers/apis"
 	"volcano.sh/volcano/pkg/controllers/metrics"
+	"volcano.sh/volcano/pkg/features"
 )
 
 func (c *queuecontroller) enqueue(req *apis.Request) {
@@ -70,6 +73,20 @@ func (c *queuecontroller) updateQueue(oldObj, newObj interface{}) {
 
 	if oldQueue.Spec.Parent != newQueue.Spec.Parent {
 		c.addQueue(newObj)
+		return
+	}
+
+	if utilfeature.DefaultFeatureGate.Enabled(features.QueueAllocationReporting) {
+		if !equality.Semantic.DeepEqual(oldQueue.Status.SchedulerAllocations, newQueue.Status.SchedulerAllocations) {
+			c.addQueue(newObj)
+			return
+		}
+		allocated, reporting, complete := desiredQueueAllocation(
+			newQueue, c.authoritativeAllocationRingID, c.authoritativeAllocationRingMembers)
+		if complete && (!equality.Semantic.DeepEqual(newQueue.Status.Allocated, allocated) ||
+			!equality.Semantic.DeepEqual(newQueue.Status.AllocationReporting, reporting)) {
+			c.addQueue(newObj)
+		}
 	}
 }
 

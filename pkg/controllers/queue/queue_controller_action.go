@@ -109,6 +109,11 @@ func (c *queuecontroller) syncQueue(queue *schedulingv1beta1.Queue, updateStateF
 		}
 	}
 
+	newQueue, err = c.syncQueueAllocationReporting(newQueue)
+	if err != nil {
+		return err
+	}
+
 	return c.syncHierarchicalQueue(newQueue)
 }
 
