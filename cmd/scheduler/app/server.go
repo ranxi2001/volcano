@@ -73,7 +73,7 @@ func Run(opt *options.ServerOption) error {
 
 	sched, err := scheduler.NewScheduler(config, opt)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// InitKubeSchedulerRelatedMetrics must always be called to initialize

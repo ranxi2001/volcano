@@ -53,6 +53,10 @@ const (
 	// capacity, preventing cluster autoscalers from triggering unnecessary
 	// scale-ups for pods that are simply waiting for queue admission.
 	SchedulingGatesQueueAdmission featuregate.Feature = "SchedulingGatesQueueAdmission"
+
+	// QueueAllocationReporting enables fixed-ring schedulers to publish disjoint
+	// Queue allocation snapshots for controller-side aggregation.
+	QueueAllocationReporting featuregate.Feature = "QueueAllocationReporting"
 )
 
 func init() {
@@ -70,4 +74,5 @@ var defaultVolcanoFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec
 	ResourceTopology:              {Default: true, PreRelease: featuregate.Alpha},
 	CronVolcanoJobSupport:         {Default: true, PreRelease: featuregate.Alpha},
 	SchedulingGatesQueueAdmission: {Default: false, PreRelease: featuregate.Alpha},
+	QueueAllocationReporting:      {Default: false, PreRelease: featuregate.Alpha},
 }

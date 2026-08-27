@@ -179,6 +179,15 @@ spec:
             - --enable-metrics=true
               {{- end }}
             - --leader-elect={{ .Values.custom.leader_elect_enable }}
+              {{- if .Values.custom.controller_feature_gates }}
+            - --feature-gates={{ .Values.custom.controller_feature_gates }}
+              {{- end }}
+              {{- if .Values.custom.queue_allocation_authoritative_ring_id }}
+            - --queue-allocation-authoritative-ring-id={{ .Values.custom.queue_allocation_authoritative_ring_id }}
+              {{- end }}
+              {{- if .Values.custom.queue_allocation_authoritative_ring_members }}
+            - --queue-allocation-authoritative-ring-members={{ .Values.custom.queue_allocation_authoritative_ring_members }}
+              {{- end }}
               {{- if $scheduler_name }}
             - --scheduler-name={{- $scheduler_name }}
               {{- end }}

@@ -9180,7 +9180,7 @@ rules:
     verbs: ["get", "list", "watch", "create", "delete", "update"]
   - apiGroups: ["scheduling.incubator.k8s.io", "scheduling.volcano.sh"]
     resources: ["queues/status"]
-    verbs: ["update"]
+    verbs: ["update", "patch"]
   - apiGroups: ["scheduling.incubator.k8s.io", "scheduling.volcano.sh"]
     resources: ["podgroups"]
     verbs: ["list", "watch", "update"]
@@ -9823,6 +9823,31 @@ spec:
                   x-kubernetes-int-or-string: true
                 description: Allocated is allocated resources in queue
                 type: object
+              allocationReporting:
+                description: |-
+                  AllocationReporting identifies the fixed-ring cohort currently used to
+                  derive Allocated. It is nil until the controller activates a complete cohort.
+                properties:
+                  expectedMembers:
+                    description: ExpectedMembers is the fixed number of reporters
+                      in the active cohort.
+                    format: int32
+                    minimum: 1
+                    type: integer
+                  ringGeneration:
+                    description: RingGeneration identifies the active fixed-ring reporting
+                      configuration.
+                    type: string
+                  ringID:
+                    description: RingID identifies the fixed scheduler ring and its
+                      accounting domain.
+                    type: string
+                required:
+                - expectedMembers
+                - ringGeneration
+                - ringID
+                type: object
+                x-kubernetes-map-type: atomic
               completed:
                 description: The number of `Completed` PodGroup in this queue.
                 format: int32
@@ -9863,6 +9888,59 @@ spec:
                 format: int32
                 minimum: 0
                 type: integer
+              schedulerAllocations:
+                additionalProperties:
+                  description: SchedulerAllocation is one fixed-ring member's complete
+                    Queue allocation snapshot.
+                  properties:
+                    allocated:
+                      additionalProperties:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      description: Allocated is the complete resource allocation snapshot
+                        for this reporter.
+                      type: object
+                    expectedMembers:
+                      description: ExpectedMembers is the fixed number of reporters
+                        in this ring generation.
+                      format: int32
+                      minimum: 1
+                      type: integer
+                    memberIndex:
+                      description: MemberIndex is this reporter's StatefulSet ordinal.
+                      format: int32
+                      minimum: 0
+                      type: integer
+                    ringGeneration:
+                      description: RingGeneration is an opaque digest of the fixed-ring
+                        reporting configuration.
+                      pattern: ^[a-f0-9]{64}$
+                      type: string
+                    ringID:
+                      description: RingID identifies the fixed scheduler ring and
+                        its accounting domain.
+                      maxLength: 512
+                      minLength: 1
+                      type: string
+                  required:
+                  - allocated
+                  - expectedMembers
+                  - memberIndex
+                  - ringGeneration
+                  - ringID
+                  type: object
+                  x-kubernetes-map-type: atomic
+                  x-kubernetes-validations:
+                  - message: memberIndex must be less than expectedMembers
+                    rule: self.memberIndex < self.expectedMembers
+                description: |-
+                  SchedulerAllocations contains complete allocation snapshots reported by
+                  the members of a fixed scheduler ring. Each map key is a stable reporter ID.
+                type: object
+                x-kubernetes-map-type: granular
               state:
                 description: State is state of queue
                 enum:

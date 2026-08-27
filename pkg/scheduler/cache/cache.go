@@ -72,6 +72,7 @@ import (
 
 	"volcano.sh/volcano/cmd/scheduler/app/options"
 	"volcano.sh/volcano/pkg/features"
+	"volcano.sh/volcano/pkg/scheduler/allocationreporting"
 	schedulingapi "volcano.sh/volcano/pkg/scheduler/api"
 	"volcano.sh/volcano/pkg/scheduler/metrics"
 	"volcano.sh/volcano/pkg/scheduler/metrics/source"
@@ -98,8 +99,20 @@ func init() {
 }
 
 // New returns a Cache implementation.
-func New(config *rest.Config, schedulerNames []string, defaultQueue string, nodeSelectors []string, nodeWorkers uint32, ignoredProvisioners []string, resyncPeriod time.Duration, resourceSyncTimeout time.Duration) Cache {
-	return newSchedulerCache(config, schedulerNames, defaultQueue, nodeSelectors, nodeWorkers, ignoredProvisioners, resyncPeriod, resourceSyncTimeout)
+func New(config *rest.Config, schedulerNames []string, defaultQueue string, nodeSelectors []string, nodeWorkers uint32, ignoredProvisioners []string, resyncPeriod time.Duration, resourceSyncTimeout time.Duration) (Cache, error) {
+	var ring *allocationreporting.FixedRing
+	if utilfeature.DefaultFeatureGate.Enabled(features.QueueAllocationReporting) {
+		var err error
+		ring, err = allocationreporting.LoadFixedRing(schedulerNames, defaultQueue)
+		if err != nil {
+			return nil, fmt.Errorf("initialize queue allocation reporting: %w", err)
+		}
+	}
+	sc := newSchedulerCache(config, schedulerNames, defaultQueue, nodeSelectors, nodeWorkers, ignoredProvisioners, resyncPeriod, resourceSyncTimeout)
+	if ring != nil {
+		sc.queueAllocationReporter = newQueueAllocationReporter(sc, ring)
+	}
+	return sc, nil
 }
 
 // SchedulerCache cache for the kube batch
@@ -196,6 +209,8 @@ type SchedulerCache struct {
 	resourceSyncTimeout time.Duration
 	// resourceClaimCache is a cache for ResourceClaims, used for DRA
 	resourceClaimCache *assumecache.AssumeCache
+
+	queueAllocationReporter QueueAllocationReporter
 }
 
 type multiSchedulerInfo struct {

@@ -372,6 +372,32 @@ type QueueStatus struct {
 	// Allocated is allocated resources in queue
 	// +optional
 	Allocated v1.ResourceList `json:"allocated,omitempty" protobuf:"bytes,8,opt,name=allocated"`
+
+	// SchedulerAllocations contains complete allocation snapshots reported by
+	// the members of a fixed scheduler ring. Each map key is a stable reporter ID.
+	// +optional
+	SchedulerAllocations map[string]SchedulerAllocation `json:"schedulerAllocations,omitempty" protobuf:"bytes,9,rep,name=schedulerAllocations"`
+
+	// AllocationReporting identifies the fixed-ring cohort currently used to
+	// derive Allocated.
+	// +optional
+	AllocationReporting *QueueAllocationReportingStatus `json:"allocationReporting,omitempty" protobuf:"bytes,10,opt,name=allocationReporting"`
+}
+
+// SchedulerAllocation is one fixed-ring member's complete Queue allocation snapshot.
+type SchedulerAllocation struct {
+	RingID          string          `json:"ringID" protobuf:"bytes,1,opt,name=ringID"`
+	RingGeneration  string          `json:"ringGeneration" protobuf:"bytes,2,opt,name=ringGeneration"`
+	MemberIndex     int32           `json:"memberIndex" protobuf:"varint,3,opt,name=memberIndex"`
+	ExpectedMembers int32           `json:"expectedMembers" protobuf:"varint,4,opt,name=expectedMembers"`
+	Allocated       v1.ResourceList `json:"allocated" protobuf:"bytes,5,opt,name=allocated"`
+}
+
+// QueueAllocationReportingStatus identifies the active fixed-ring allocation cohort.
+type QueueAllocationReportingStatus struct {
+	RingID          string `json:"ringID" protobuf:"bytes,1,opt,name=ringID"`
+	RingGeneration  string `json:"ringGeneration" protobuf:"bytes,2,opt,name=ringGeneration"`
+	ExpectedMembers int32  `json:"expectedMembers" protobuf:"varint,3,opt,name=expectedMembers"`
 }
 
 // CluterSpec represents the template of Cluster

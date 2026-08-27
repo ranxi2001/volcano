@@ -22,6 +22,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/spf13/pflag"
 	v1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -92,14 +93,31 @@ type queuecontroller struct {
 	recorder      record.EventRecorder
 	workers       uint32
 	maxRequeueNum int
+
+	authoritativeAllocationRingID      string
+	authoritativeAllocationRingMembers int32
 }
 
 func (c *queuecontroller) Name() string {
 	return "queue-controller"
 }
 
+// AddFlags registers Queue allocation reporting flags.
+func (c *queuecontroller) AddFlags(fs *pflag.FlagSet) {
+	fs.StringVar(&c.authoritativeAllocationRingID, "queue-allocation-authoritative-ring-id", "",
+		"Fixed scheduler ring that is the complete Queue accounting domain when QueueAllocationReporting is enabled")
+	fs.Int32Var(&c.authoritativeAllocationRingMembers, "queue-allocation-authoritative-ring-members", 0,
+		"Expected fixed member count of the authoritative Queue allocation reporting ring")
+}
+
 // Initialize creates  QueueController from option.
 func (c *queuecontroller) Initialize(opt *framework.ControllerOption) error {
+	if utilfeature.DefaultFeatureGate.Enabled(features.QueueAllocationReporting) && c.authoritativeAllocationRingID == "" {
+		return fmt.Errorf("--queue-allocation-authoritative-ring-id must be set when QueueAllocationReporting is enabled")
+	}
+	if utilfeature.DefaultFeatureGate.Enabled(features.QueueAllocationReporting) && c.authoritativeAllocationRingMembers <= 0 {
+		return fmt.Errorf("--queue-allocation-authoritative-ring-members must be positive when QueueAllocationReporting is enabled")
+	}
 	c.vcClient = opt.VolcanoClient
 	c.kubeClient = opt.KubeClient
 

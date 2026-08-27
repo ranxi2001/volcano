@@ -39,6 +39,8 @@ spec:
           args:
             - --logtostderr
             - --scheduler-conf=/volcano.scheduler/volcano-scheduler.conf
+            - --feature-gates=QueueAllocationReporting=true
+            - --leader-elect=false
             - -v=3
             - 2>&1
           imagePullPolicy: "IfNotPresent"
@@ -51,6 +53,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: SCHEDULER_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           volumeMounts:
             - name: scheduler-config
               mountPath: /volcano.scheduler
@@ -76,9 +82,30 @@ spec:
 Notes:
 1. MULTI_SCHEDULER_ENABLE env is used to enable or disable  multi-scheduler.
 2. SCHEDULER_NUM indicates the numbers of volcano schedulers which you are planning to launch.
+3. Queue allocation reporting is an Alpha, fixed-membership protocol. The
+   controller-manager must also enable `QueueAllocationReporting` and set
+   `--queue-allocation-authoritative-ring-id=volcano-system/volcano-scheduler`
+   and `--queue-allocation-authoritative-ring-members=3`.
+   This declares that the ring is the complete accounting domain for every
+   Queue. Do not enable it when Agent Scheduler, NodeShard, another scheduler
+   ring, or another non-reporting scheduler shares those Queues.
+4. Every scheduler replica must run, so leader election must be disabled for
+   this StatefulSet. The reporting feature rejects leader election at startup.
+5. Do not resize the ring while controller aggregation is active. Disable
+   `QueueAllocationReporting` on the controller-manager, roll every scheduler
+   member with the new `SCHEDULER_NUM`, update the authoritative member flag,
+   and then re-enable controller aggregation. The controller keeps the prior
+   total until one complete new generation has reported.
+6. A `ResourceClaim` shared by jobs assigned to different ring members is not
+   supported in this protocol version because claim deduplication is local to
+   one reporter.
+7. Reports do not expire by time. A permanently unavailable member can leave
+   the aggregate stale-high until that StatefulSet ordinal recovers.
+8. The Pod and PodGroup for a workload must resolve to the same consistent-hash
+   ownership key. Volcano Jobs satisfy this by using the Job owner reference;
+   other owner layouts are outside this protocol's accounting guarantee.
 
 ### 2. Deploy the statefulset
 ```
 kubectl apply -f <volcano-statefulset.yaml>
 ```
-
